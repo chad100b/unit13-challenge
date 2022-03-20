@@ -29,34 +29,33 @@ def build_validation_result(is_valid, violated_slot, message_content):
 
 ### Start My Code ###
 
-def validate_data(first_name, age, investment_amount, intent_request):
+def validate_data(age, investment_amount, intent_request):
     """
     Validates the data provided by the user.
     """
 
-# Validate the user's age is greater than zero and less than 65
-    if first_name is not None:
-        if first_name = int:
-            return build_validation_result(
-                False,
-                "first_name",
-                "Name cannot be a number, please provide first name",
-            )
-
     # Validate the user's age is greater than zero and less than 65
     if age is not None:
-        age = parse_intent(age)
-        if age not in range (0,65)
-        return build_validation_result(
+        age = parse_int(age)
+        if age < 0:
+            return build_validation_result(
             False,
             "age",
-            "You need to be older than 0 and younger than 65 to recieve a recommended retirment portfolio,"
+            "You need to be older than 0 years of age to recieve a recommended retirment portfolio,"
             "please provide a different age."
-        )
+            )
+        elif age >=65:
+            return build_validation_result(
+            False,
+            "age",
+            "You need to be younger than 65 to recieve a recommended retirment portfolio,"
+            "please provide a different age."
+            )
+            
 
-    # Validate the investment amount, it should be > 0
+    # Validate the investment amount, it should be > $5,000
     if investment_amount is not None:
-        investment_amount = parse_float(
+        investment_amount = parse_int(
             investment_amount
         )  # Since parameters are strings it's important to cast values
         if investment_amount <= 5000:
@@ -143,7 +142,7 @@ def recommend_portfolio(intent_request):
         # Gets all the slots
         slots = get_slots(intent_request)
         # Validate user's input using the validate_data function
-        validation_result = validate_data(first_name, age, investment_amount, intent_request)
+        validation_result = validate_data(age, investment_amount, intent_request)
         
         # If the data provided by the user is not valid, use the elicitSlot dialog
         # action to re-prompt for the first violation detected.
